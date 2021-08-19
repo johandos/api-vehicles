@@ -1,0 +1,63 @@
+version: '3'
+services:
+  #Nginx Service
+  webserver:
+    image: nginx
+    depends_on:
+      - app
+      - db
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    command: [ nginx-debug, '-g', 'daemon off;' ]
+    container_name: web-symf
+    networks:
+      vpcsymf:
+        ipv4_address: 16.5.0.4
+  #PHP Service
+  app:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: app-symf
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      vpcsymf:
+        ipv4_address: 16.5.0.3
+  #MySQL Service
+  db:
+    image: mysql
+    container_name: db-symf
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    tty: true
+    environment:
+      MYSQL_DATABASE: vehicles
+      MYSQL_ROOT_PASSWORD: password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - datasymf:/var/lib/mysql/
+    networks:
+      vpcsymf:
+        ipv4_address: 16.5.0.2
+#Docker Networks
+networks:
+  vpcsymf:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 16.5.0.0/16
+          gateway: 16.5.0.1
+#Volumes
+volumes:
+  datasymf:
+    driver: local
