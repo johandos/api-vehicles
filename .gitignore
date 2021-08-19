@@ -1,10 +1,10 @@
 
 ###> symfony/framework-bundle ###
-/vehicles/.env.local
-/vehicles/.env.local.php
-/vehicles/.env.*.local
-/vehicles/config/secrets/prod/prod.decrypt.private.php
-/vehicles/public/bundles/
-/vehicles/var/
-/vehicles/vendor/
+/vehicle/.env.local
+/vehicle/.env.local.php
+/vehicle/.env.*.local
+/vehicle/config/secrets/prod/prod.decrypt.private.php
+/vehicle/public/bundles/
+/vehicle/var/
+/vehicle/vendor/
 ###< symfony/framework-bundle ###
